@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import Button from '../../UI/Button/Buttons';
+import Button from '../../UI/Button/Button';
 
 class OrderSummary extends Component {
   // Can be a functional component.
