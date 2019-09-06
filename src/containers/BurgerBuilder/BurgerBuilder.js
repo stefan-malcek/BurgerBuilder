@@ -48,7 +48,10 @@ class BurgerBuilder extends Component {
     );
     if (this.props.ings) {
       const disabledInfo = Object.entries(this.props.ings).reduce(
-        (accum, [key, count]) => ((accum[key] = count <= 0), accum),
+        (accum, [key, count]) => {
+          accum[key] = count <= 0;
+          return accum;
+        },
         {}
       );
 

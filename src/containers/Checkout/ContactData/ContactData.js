@@ -4,9 +4,10 @@ import axios from '../../../axios-orders';
 import Button from '../../../components/UI/Button/Button';
 import Input from '../../../components/UI/Input/Input';
 import Spinner from '../../../components/UI/Spinner/Spinner';
-import classes from './ContactData.module.css';
 import withErrorHandler from '../../../hoc/WithErrorHandler/WithErrorHandler';
+import { checkValidity, updateObject } from '../../../shared/utility';
 import * as actions from '../../../store/actions/index';
+import classes from './ContactData.module.css';
 
 class ContactData extends Component {
   state = {
@@ -97,7 +98,10 @@ class ContactData extends Component {
     event.preventDefault();
 
     const formData = Object.entries(this.state.orderForm).reduce(
-      (accum, [key, value]) => ((accum[key] = value.value), accum),
+      (accum, [key, value]) => {
+        accum[key] = value.value;
+        return accum;
+      },
       {}
     );
     const order = {
@@ -110,57 +114,26 @@ class ContactData extends Component {
     this.props.onOrderBurger(order, this.props.token);
   };
 
-  checkValidity(value, rules) {
-    let isValid = true;
-    if (!rules) {
-      return true;
-    }
-
-    if (rules.required) {
-      isValid = value.trim() !== '' && isValid;
-    }
-
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      isValid = pattern.test(value) && isValid;
-    }
-
-    if (rules.isNumeric) {
-      const pattern = /^\d+$/;
-      isValid = pattern.test(value) && isValid;
-    }
-
-    return isValid;
-  }
-
   inputChangedHandler = (event, inputId) => {
-    const updatedOrderForm = {
-      ...this.state.orderForm
-    };
-    const updatedFormElement = {
-      ...updatedOrderForm[inputId],
-      value: event.target.value
-    };
-    updatedFormElement.valid = this.checkValidity(
-      updatedFormElement.value,
-      updatedFormElement.validation
+    const updatedFormElement = updateObject(this.state.orderForm[inputId], {
+      value: event.target.value,
+      valid: checkValidity(
+        event.target.value,
+        this.state.orderForm[inputId].validation
+      ),
+      touched: true
+    });
+
+    const updatedOrderForm = updateObject(this.state.orderForm, {
+      [inputId]: updatedFormElement
+    });
+
+    let formIsValid = Object.entries(updatedOrderForm).reduce(
+      (accum, [_, control]) => {
+        return accum && control.valid;
+      },
+      true
     );
-    updatedFormElement.touched = true;
-
-    updatedOrderForm[inputId] = updatedFormElement;
-
-    let formIsValid = true;
-    for (let inputIdentifier in updatedOrderForm) {
-      formIsValid = formIsValid && updatedOrderForm[inputIdentifier].valid;
-    }
 
     this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
   };

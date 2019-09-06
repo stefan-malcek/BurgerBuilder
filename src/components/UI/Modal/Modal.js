@@ -1,6 +1,6 @@
-import React, { Fragment, Component } from 'react';
-import classes from './Modal.module.css';
+import React, { Component, Fragment } from 'react';
 import Backdrop from '../Backdrop/Backdrop';
+import classes from './Modal.module.css';
 
 class Modal extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -8,10 +8,6 @@ class Modal extends Component {
       nextProps.show !== this.props.show ||
       nextProps.children !== this.props.children
     );
-  }
-
-  componentDidUpdate() {
-    console.log('[Modal] did update');
   }
 
   render() {

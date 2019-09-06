@@ -2,10 +2,6 @@ import React, { Fragment, Component } from 'react';
 import Button from '../../UI/Button/Button';
 
 class OrderSummary extends Component {
-  // Can be a functional component.
-  componentDidUpdate() {
-    console.log('[OrderSummary] did update.');
-  }
 
   render() {
     const ingredientSummary = Object.entries(this.props.ingredients).map(
