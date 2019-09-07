@@ -40,7 +40,7 @@ class Auth extends Component {
         touched: false
       }
     },
-    isSignup: true
+    isSignup: false
   };
 
   inputChangedHandler = (event, controlName) => {
