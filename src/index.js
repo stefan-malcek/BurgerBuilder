@@ -25,6 +25,7 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
+    {/* Set base-path if the app is not served directly from domain */}
     <BrowserRouter>
       <App />
     </BrowserRouter>
