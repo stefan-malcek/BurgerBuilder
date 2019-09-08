@@ -40,12 +40,13 @@ function Auth(props) {
     }
   });
   const [isSignup, setIsSignup] = useState(false);
+  const { buildingBurger, authRedirect, onSetAuthRedirectPath } = props;
 
   useEffect(() => {
-    if (!props.buildingBurger && props.authRedirect !== '/') {
-      props.onSetAuthRedirectPath();
+    if (!buildingBurger && authRedirect !== '/') {
+      onSetAuthRedirectPath();
     }
-  }, []);
+  }, [buildingBurger, authRedirect, onSetAuthRedirectPath]);
 
   const inputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(authForm, {
@@ -95,13 +96,13 @@ function Auth(props) {
     errorMessage = <p>{props.error.message}</p>;
   }
 
-  let authRedirect = null;
+  let authRedirectComponent = null;
   if (props.isAuthenticated) {
-    authRedirect = <Redirect to={props.authRedirect} />;
+    authRedirectComponent = <Redirect to={props.authRedirect} />;
   }
   return (
     <div className={classes.Auth}>
-      {authRedirect}
+      {authRedirectComponent}
       {errorMessage}
       <form onSubmit={submitHandler}>
         {form}
